@@ -75,7 +75,8 @@ def process_log_data(spark, input_data, output_data):
     
     # extract columns for users table    
     users_table = spark.sql("""
-                            SELECT DISTINCT                                                   userId as user_id,                                               firstName as first_name,
+                            SELECT DISTINCT  userId as user_id,                                              
+                            firstName as first_name,
                             lastName as last_name,
                             gender as gender,
                             level as level
@@ -104,9 +105,9 @@ def process_log_data(spark, input_data, output_data):
                             weekofyear(A.start_time_sub) as week,
                             month(A.start_time_sub) as month,
                             year(A.start_time_sub) as year,
-                            dayofweek(A.start_time_sub) as                                   weekday
+                            dayofweek(A.start_time_sub) as weekday
                             FROM
-                            (SELECT to_timestamp(timeSt.ts/1000)                             as start_time_sub
+                            (SELECT to_timestamp(timeSt.ts/1000) as start_time_sub
                             FROM log_data_table timeSt
                             WHERE timeSt.ts IS NOT NULL
                             ) A
@@ -118,10 +119,10 @@ def process_log_data(spark, input_data, output_data):
    
     # extract columns from joined song and log datasets to create songplays table 
     songplays_table = spark.sql("""
-                                SELECT                                                           monotonically_increasing_id() as                                 songplay_id,
-                                to_timestamp(logT.ts/1000) as                                     start_time,
-                                month(to_timestamp(logT.ts/1000))                                 as month,
-                                year(to_timestamp(logT.ts/1000))                                 as year,
+                                SELECT monotonically_increasing_id() as songplay_id,
+                                to_timestamp(logT.ts/1000) as start_time,
+                                month(to_timestamp(logT.ts/1000)) as month,
+                                year(to_timestamp(logT.ts/1000)) as year,
                                 logT.userId as user_id,
                                 logT.level as level,
                                 songT.song_id as song_id,
@@ -130,7 +131,7 @@ def process_log_data(spark, input_data, output_data):
                                 logT.location as location,
                                 logT.userAgent as user_agent
                                 FROM log_data_table logT
-                                JOIN song_data_table songT on                                     logT.artist = songT.artist_name                                   and logT.song = songT.title
+                                JOIN song_data_table songT on logT.artist = songT.artist_name and logT.song = songT.title
                             """) 
 
     # write songplays table to parquet files partitioned by year and month
