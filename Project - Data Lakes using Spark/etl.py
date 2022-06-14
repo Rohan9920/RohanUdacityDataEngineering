@@ -22,6 +22,16 @@ def create_spark_session():
 
 
 def process_song_data(spark, input_data, output_data):
+   """
+        Description: This function loads song_data from S3 and processes it by extracting the songs and artist tables
+        and then again loaded back to S3
+        
+        Parameters:
+            spark       : this is the Spark Session
+            input_data  : the location of song_data from where the file is load to process
+            output_data : the location where after processing the results will be stored
+            
+    """
     # get filepath to song data file
     song_data = input_data + '/song_data/*/*/*/TRABCEI128F424C983.json'
     
@@ -60,6 +70,16 @@ def process_song_data(spark, input_data, output_data):
 
 
 def process_log_data(spark, input_data, output_data):
+    """
+        Description: This function loads log_data from S3 and processes it by extracting the songs and artist tables
+        and then again loaded back to S3. Also output from previous function is used in by spark.read.json command
+        
+        Parameters:
+            spark       : this is the Spark Session
+            input_data  : the location of song_data from where the file is load to process
+            output_data : the location where after processing the results will be stored
+            
+    """
     # get filepath to log data file
     log_data = input_data + '/log_data/*/*/*.json'
 
